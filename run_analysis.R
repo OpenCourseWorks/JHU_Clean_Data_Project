@@ -56,6 +56,17 @@ for (var in 2:length(final_combined))
 mean_by_group<-cbind(names(final_combined),mean_by_group)
 colnames(mean_by_group)[1]<-"subject_no/activity/group"
 finalresult<-data.frame(mean_by_group)
-write.table(finalresult,file = "result.txt",row.name=F)
 
+# because type of movement and subject number and grouping were merged into one factor,
+# split the string into 3 different variables and cbind it back
+
+
+sbj_acttype<-as.data.frame(strsplit(as.character(finalresult$subject_no.activity.group),"[.]"))
+sbj_acttype<-t(sbj_acttype)
+colnames(sbj_acttype)<-c("subject number","activity type","test or train group")
+
+finalresult<-subset(finalresult,select=-c(1))
+finalresult<-cbind(sbj_acttype,finalresult)
+
+write.table(finalresult,file = "result.txt",row.name=F)
 
